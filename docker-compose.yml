@@ -7,16 +7,18 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     volumes:
       - ./database/:/docker-entrypoint-initdb.d/
+
   minio1:
     image: minio/minio
     volumes:
-      - ./Export1:/export
+      - ./minio1/:/export
     ports:
       - "9001:9000"
     environment:
-      - MINIO_ACCESS_KEY= AccessMinio
-      - MINIO_SECRET_KEY= PasswordMinio
-    command: server /export
+      MINIO_ACCESS_KEY: daravuth
+      MINIO_SECRET_KEY: daravuth
+    command: server minio1/export
+  
   website:
     build: 
       context: .
@@ -29,4 +31,3 @@ services:
     environment:
       -  MYSQL_HOST=db
       -  MYSQL_ROOT_PASSWORD=root
- 
