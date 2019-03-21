@@ -16,7 +16,7 @@ services:
     environment:
       - MINIO_ACCESS_KEY= AccessMinio
       - MINIO_SECRET_KEY= PasswordMinio
-    command: server export
+    command: server /export
   website:
     build: 
       context: .
