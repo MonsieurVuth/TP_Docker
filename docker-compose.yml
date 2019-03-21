@@ -11,13 +11,13 @@ services:
   minio1:
     image: minio/minio
     volumes:
-      - ./minio1/:/export
+      - ./minio2/:/export
     ports:
       - "9001:9000"
     environment:
       MINIO_ACCESS_KEY: daravuth
       MINIO_SECRET_KEY: daravuth
-    command: server minio1/export
+    command: server minio2/export
   
   website:
     build: 
