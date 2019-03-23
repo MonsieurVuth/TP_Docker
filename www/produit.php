@@ -2,6 +2,7 @@
     session_start();
     include 'connect.php';
     include 'fonctions.php';
+    include 'function_s3.php';
     secu();
 
     if (!isset($_GET['id']) or $_GET['id'] == '') {
@@ -46,8 +47,6 @@
         <div class="description">
             <?php echo nl2br($produit['PRO_description']); ?>
         </div>
-        
-
         <?php
             $sql = "SELECT * FROM ressources WHERE PRO_id = $PRO_id";
             $res = mysqli_query($link, $sql);
@@ -62,7 +61,8 @@
             <?php
                 foreach($ressources as $ressource) {
                     if ($ressource['RE_type'] == 'img') {
-                        echo '<img src="'.$ressource['RE_url'].'" class="img-thumbnail thumb" data-id="'.$ressource['RE_id'].'">';
+                        $pic = base64_encode(dl($ressource['RE_url'])['Body']);
+                        echo '<img src="data:image;base64,'.$pic.'" class="img-thumbnail thumb" data-id="'.$ressource['RE_id'].'">';
                     }
                 }
             ?>
@@ -73,7 +73,6 @@
         <?php
             }
         ?>
-
         <div class="form-group" style="margin-top: 20px;">
                 <button type="button" class="btn btn-warning" onClick="goto('form_produit.php?id=<?php echo $PRO_id ?>')">Modifier</button>
                 <button type="button" class="btn btn-primary" onClick="goto('home.php')">Retour</button>

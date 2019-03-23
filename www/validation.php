@@ -1,10 +1,8 @@
 <?php
-
     include 'connect.php';
     include 'function_s3.php';
 
-    function upload_files($PRO_id, $link)
-{
+    function upload_files($PRO_id, $link){
     foreach ($_FILES["PRO_ressources"]["error"] as $key => $error) {
         if ($error == UPLOAD_ERR_OK) {
             $tmp_name = $_FILES["PRO_ressources"]["tmp_name"][$key];
@@ -18,8 +16,6 @@
         }
     }
 }
-
-
     $action = (isset($_POST['action'])) ? $_POST['action'] : $_GET['action'];
 
     switch ($action) {
@@ -34,7 +30,6 @@
                 $PRO_id = mysqli_insert_id($link);
 		upload_files($PRO_id, $link);
 		header('Location: home.php');
-
             } else {
                 die("Erreur SQL");
             }
@@ -52,7 +47,6 @@
             if (mysqli_query($link,$sql)) {
 		upload_files($PRO_id, $link);
                 header('Location: produit.php?id='.$_POST['PRO_id']);
-
             } else {
                 die("Erreur SQL");
             }
@@ -117,6 +111,4 @@
             # code...
             break;
     }
-
-
 ?>

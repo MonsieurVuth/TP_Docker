@@ -73,7 +73,8 @@
                             while ($ressource = mysqli_fetch_assoc($res)) {
                                 if ($ressource['RE_type'] == 'img') {
                                     echo '<div class="img">';
-                                    echo '<img src="'.$ressource['RE_url'].'" class="img-thumbnail thumb" data-id="'.$ressource['RE_id'].'">';
+                                    $pic = base64_encode(dl($ressource['RE_url'])['Body']);
+                                    echo '<img src="data:image;base64,'.$image.'" class="img-thumbnail thumb" data-id="'.$ressource['RE_id'].'">';
                                     echo '<img src="img/trash.svg" class="icon trash" data-id="'.$ressource['RE_id'].'">';
                                     echo '</div>';
                                 }
