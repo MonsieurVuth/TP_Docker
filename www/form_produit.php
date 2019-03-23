@@ -2,6 +2,7 @@
     session_start();
     include 'connect.php';
     include 'fonctions.php';
+    include 'function_s3.php';
     secu();
 
     if (isset($_GET['id'])) {
