@@ -8,7 +8,7 @@ use AWS\S3\S3Client;
 $s3 = new Aws\S3\S3Client([
 	'version' => 'latest',
 	'region' => 'eu-west-3',
-	'endpoint' => 'http://192.168.0.28:9001/minio',
+	'endpoint' => 'http://172.20.10.6:9001/minio',
 	'use_path_style_endpoint' => true,
 	'credentials' => [
 		'key' => 'daravuth',
