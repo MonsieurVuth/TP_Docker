@@ -42,4 +42,12 @@ function dl($clef){
 	]);
 	return $output['Body'];
 }
+//Suppression de l'objet
+function suppression($clef){
+global $s3;
+return $s3->deleteObject([
+        'Bucket' => bucketName,
+        'Key' => $clef,
+    ]);
+}
 ?>

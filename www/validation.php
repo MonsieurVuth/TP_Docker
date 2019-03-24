@@ -2,7 +2,7 @@
     include 'connect.php';
     include 'function_s3.php';
 
-    function upload_files($PRO_id, $link){
+    function insertion($PRO_id, $link){
     foreach ($_FILES["PRO_ressources"]["error"] as $key => $error) {
         if ($error == UPLOAD_ERR_OK) {
             $tmp_name = $_FILES["PRO_ressources"]["tmp_name"][$key];
@@ -14,6 +14,13 @@
             $sql = "INSERT INTO ressources (RE_type,RE_url,PRO_id) VALUES ('img', '$name', $PRO_id)";
             mysqli_query($link, $sql);
         }
+    }
+}
+
+function suppression_doc($RE_id, $link, $key){
+    $sql = "DELETE FROM ressources WHERE RE_id = '$RE_id'";
+    if (mysqli_query($link, $sql)) {
+        suppression($key);
     }
 }
     $action = (isset($_POST['action'])) ? $_POST['action'] : $_GET['action'];
@@ -28,7 +35,7 @@
             $sql = "INSERT INTO produits (PRO_lib, PRO_description, PRO_prix) VALUES ($PRO_lib,$PRO_description,$PRO_prix)";
             if (mysqli_query($link,$sql)) {
                 $PRO_id = mysqli_insert_id($link);
-		upload_files($PRO_id, $link);
+		insertion($PRO_id, $link);
 		header('Location: home.php');
             } else {
                 die("Erreur SQL");
@@ -45,7 +52,7 @@
 
             $sql = "UPDATE produits SET PRO_lib = $PRO_lib, PRO_description = $PRO_description, PRO_prix = $PRO_prix WHERE PRO_id = $PRO_id";
             if (mysqli_query($link,$sql)) {
-		upload_files($PRO_id, $link);
+		insertion($PRO_id, $link);
                 header('Location: produit.php?id='.$_POST['PRO_id']);
             } else {
                 die("Erreur SQL");
@@ -59,19 +66,13 @@
                 $res = mysqli_query($link, $sql);
                 if(mysqli_num_rows($res) > 0) {
                     $ressource = mysqli_fetch_assoc($res); 
-                    $sql = "DELETE FROM ressources WHERE RE_id = '$RE_id'";
-                    if (mysqli_query($link, $sql)) {
-                        if (file_exists($ressource['RE_url'])) {
-                            unlink($ressource['RE_url']);
-                        }
-                        echo 'OK';
+                    suppression_doc($RE_id, $link, $ressource['RE_url']);
                     } else {
                         echo 'NOK';
                     }
                 } else {
                     echo 'NOK';
                 }
-            }
             break;
         case 'supprimer_produit':
             if(isset($_POST['PRO_id'])) {
@@ -86,11 +87,7 @@
                     if (mysqli_num_rows($res) > 0) {
                         while($ressource = mysqli_fetch_assoc($res)) {
                             $RE_id = $ressource['RE_id'];
-                            $sql = "DELETE FROM ressources WHERE RE_id = $RE_id";
-                            if (mysqli_query($link, $sql)) {
-                                if (file_exists($ressource['RE_url'])) {
-                                    unlink($ressource['RE_url']);
-                                }
+                            suppression_doc($RE_id, $link, $ressource['RE_url']);
                             }
                         }
                     }
@@ -105,7 +102,6 @@
                 } else {
                     echo 'NOK';
                 }
-            }
             break;
         default:
             # code...
